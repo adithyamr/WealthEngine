@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WealthEngine Daily Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f7; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 32px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .header p { margin: 8px 0 0; opacity: 0.7; font-size: 14px; }
+        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e5e5e5; margin: 0; }
+        .metric { background: white; padding: 20px; text-align: center; }
+        .metric-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .metric-value { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+        .metric-value.positive { color: #00b386; }
+        .metric-value.negative { color: #e74c3c; }
+        .section { padding: 24px 28px; }
+        .section-title { font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .holding-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .holding-name { font-weight: 500; font-size: 14px; color: #333; }
+        .holding-symbol { font-size: 12px; color: #888; }
+        .holding-value { font-size: 14px; font-weight: 600; }
+        .pnl { font-size: 12px; }
+        .footer { background: #f5f5f7; padding: 20px; text-align: center; font-size: 12px; color: #888; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-positive { background: #e6f9f2; color: #00b386; }
+        .badge-negative { background: #fef0ed; color: #e74c3c; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 WealthEngine</h1>
+        <p th:text="${'Daily Portfolio Report – ' + asOf}">Daily Portfolio Report</p>
+    </div>
+
+    <div class="metric-grid">
+        <div class="metric">
+            <div class="metric-label">Total Net Worth</div>
+            <div class="metric-value" th:text="${'₹' + #numbers.formatDecimal(summary.totalNetWorth, 1, 'COMMA', 2, 'POINT')}">₹0</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Total Invested</div>
+            <div class="metric-value" th:text="${'₹' + #numbers.formatDecimal(summary.totalInvested, 1, 'COMMA', 2, 'POINT')}">₹0</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Gain / Loss</div>
+            <div class="metric-value"
+                 th:classappend="${summary.totalGainLoss >= 0 ? 'positive' : 'negative'}"
+                 th:text="${(summary.totalGainLoss >= 0 ? '+₹' : '-₹') + #numbers.formatDecimal(summary.totalGainLoss.abs(), 1, 'COMMA', 2, 'POINT')}">₹0</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">XIRR (Annualized)</div>
+            <div class="metric-value"
+                 th:classappend="${summary.xirrPercent >= 0 ? 'positive' : 'negative'}"
+                 th:text="${summary.xirrPercent + '%'}">0%</div>
+        </div>
+    </div>
+
+    <div class="section" th:if="${summary.topHoldings != null and !summary.topHoldings.isEmpty()}">
+        <div class="section-title">Top Holdings</div>
+        <div th:each="holding : ${summary.topHoldings}">
+            <div class="holding-row">
+                <div>
+                    <div class="holding-name" th:text="${holding.name}">Holding Name</div>
+                    <div class="holding-symbol" th:text="${holding.symbol != null ? holding.symbol + ' • ' + holding.assetType : holding.assetType}">SYMBOL</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="holding-value" th:text="${'₹' + #numbers.formatDecimal(holding.currentValue, 1, 'COMMA', 0, 'POINT')}">₹0</div>
+                    <span class="badge"
+                          th:classappend="${holding.gainLossPercent >= 0 ? 'badge-positive' : 'badge-negative'}"
+                          th:text="${(holding.gainLossPercent >= 0 ? '+' : '') + #numbers.formatDecimal(holding.gainLossPercent, 1, 2) + '%'}">
+                        0%
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" th:if="${summary.allocationBySector != null and !summary.allocationBySector.isEmpty()}">
+        <div class="section-title">Sector Allocation</div>
+        <div th:each="entry : ${summary.allocationBySector}">
+            <div class="holding-row">
+                <div class="holding-name" th:text="${entry.key}">Sector</div>
+                <div class="holding-value" th:text="${#numbers.formatDecimal(entry.value * 100, 1, 1) + '%'}">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>WealthEngine – Your Personal Financial Advisor</p>
+        <p>This report was auto-generated. Past performance is not indicative of future results.</p>
+        <p style="color: #ccc; font-size: 10px; margin-top: 8px;">Data as of market close. Prices are indicative.</p>
+    </div>
+</div>
+</body>
+</html>

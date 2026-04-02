@@ -1,0 +1,119 @@
+spring:
+  application:
+    name: wealth-engine
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:wealthengine}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:changeme}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate # schema managed by Flyway, never auto-create
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  # Spring AI - OpenAI
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gpt-4o}
+          temperature: 0.3
+      embedding:
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+
+    # PGVector Store
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 1536
+        distance-type: COSINE_DISTANCE
+        index-type: HNSW
+
+# Dhan API
+dhan:
+  client-id: ${DHAN_CLIENT_ID}
+  access-token: ${DHAN_ACCESS_TOKEN}
+  base-url: ${DHAN_BASE_URL:https://api.dhan.co}
+  ws-feed-url: wss://api-feed.dhan.co
+  ws-reconnect-delay-seconds: 5
+  snapshot-timeout-ms: 5000
+
+# JWT
+jwt:
+  secret: ${JWT_SECRET}
+  expiry-ms: ${JWT_EXPIRY_MS:86400000}
+
+# Notification
+notification:
+  mail:
+    from: ${MAIL_USERNAME:noreply@wealthengine.com}
+    recipient: ${MAIL_REPORT_RECIPIENT:${MAIL_USERNAME}}
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      dhan-api:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+  retry:
+    instances:
+      dhan-api:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - org.springframework.web.client.ResourceAccessException
+
+# Management/Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,caches
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# OpenAPI / Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+
+# Logging
+logging:
+  level:
+    com.wealthengine: INFO
+    org.springframework.ai: DEBUG
+    io.github.resilience4j: DEBUG

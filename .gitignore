@@ -1,0 +1,57 @@
+# ─── Secrets & Environment ───────────────────────────────────────────────────
+.env
+*.env.local
+*.env.*.local
+
+# ─── Java / Maven ─────────────────────────────────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.classpath
+.project
+.settings/
+*.tmproj
+*.swp
+*.swo
+
+# ─── Node / Angular ───────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+# (keep docker-compose.yml in repo)
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+spring.log
+
+# ─── OS Files ─────────────────────────────────────────────────────────────────
+Thumbs.db
+*.tmp
+*.bak
