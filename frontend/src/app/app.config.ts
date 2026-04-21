@@ -12,12 +12,19 @@ import { PortfolioEffects } from './store/portfolio/portfolio.effects';
 import { AgentEffects } from './store/agent/agent.effects';
 import { HoldingsEffects } from './store/holdings/holdings.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { environment } from '../environments/environment';
+import { PortfolioService } from './core/services/portfolio.service';
+import { MockPortfolioService } from './core/services/portfolio.mock.service';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
         provideHttpClient(withInterceptors([authInterceptor])),
+        {
+            provide: PortfolioService,
+            useClass: environment.useMock ? MockPortfolioService : PortfolioService
+        },
         provideStore({
             portfolio: portfolioReducer,
             agent: agentReducer,

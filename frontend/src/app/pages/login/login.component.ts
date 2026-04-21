@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { PortfolioService } from '../../core/services/portfolio.service';
 
 @Component({
-    selector: 'we-login',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
-    template: `
+  selector: 'we-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
     <div class="min-h-screen bg-wealth-dark flex items-center justify-center px-4">
       <div class="w-full max-w-md">
         <!-- Logo -->
@@ -54,29 +54,26 @@ import { HttpClient } from '@angular/common/http';
   `
 })
 export class LoginComponent {
-    username = '';
-    password = '';
-    loading = false;
-    error = '';
+  username = '';
+  password = '';
+  loading = false;
+  error = '';
 
-    constructor(private http: HttpClient, private router: Router) { }
+  constructor(private portfolioService: PortfolioService, private router: Router) { }
 
-    login() {
-        if (!this.username || !this.password) return;
-        this.loading = true;
-        this.error = '';
-        this.http.post<{ token: string }>('/api/v1/auth/login', {
-            username: this.username,
-            password: this.password
-        }).subscribe({
-            next: (res) => {
-                localStorage.setItem('we_token', res.token);
-                this.router.navigate(['/dashboard']);
-            },
-            error: (err) => {
-                this.error = err.status === 401 ? 'Invalid credentials' : 'Login failed. Is the backend running?';
-                this.loading = false;
-            }
-        });
-    }
+  login() {
+    if (!this.username || !this.password) return;
+    this.loading = true;
+    this.error = '';
+    this.portfolioService.login(this.username, this.password).subscribe({
+      next: (res) => {
+        localStorage.setItem('we_token', res.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.error = err.status === 401 ? 'Invalid credentials' : 'Login failed. Is the backend running?';
+        this.loading = false;
+      }
+    });
+  }
 }

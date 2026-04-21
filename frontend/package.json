@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.config.json",
+    "start:mock": "ng serve --configuration mock",
     "build": "ng build --configuration production",
     "test": "ng test --no-watch --browsers ChromeHeadless",
     "lint": "ng lint"

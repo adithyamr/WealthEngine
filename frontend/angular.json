@@ -55,6 +55,17 @@
                             "optimization": false,
                             "extractLicenses": false,
                             "sourceMap": true
+                        },
+                        "mock": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.mock.ts"
+                                }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
@@ -67,11 +78,17 @@
                         },
                         "development": {
                             "buildTarget": "wealth-engine:build:development"
+                        },
+                        "mock": {
+                            "buildTarget": "wealth-engine:build:mock"
                         }
                     },
                     "defaultConfiguration": "development"
                 }
             }
         }
+    },
+    "cli": {
+        "analytics": "95769836-4e59-4cbb-8b80-1094de9208f1"
     }
 }

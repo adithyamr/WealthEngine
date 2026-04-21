@@ -23,10 +23,10 @@ export const agentReducer = createReducer(
     on(AgentActions.analyzeStockFailure, (state, { error }) => ({ ...state, error, analyzing: false })),
     on(AgentActions.sendChat, (state, { message }) => ({
         ...state,
-        chatMessages: [...state.chatMessages, { role: 'user', content: message }]
+        chatMessages: [...state.chatMessages, { role: 'user' as const, content: message }]
     })),
     on(AgentActions.chatResponse, (state, { response }) => ({
         ...state,
-        chatMessages: [...state.chatMessages, { role: 'assistant', content: response }]
+        chatMessages: [...state.chatMessages, { role: 'assistant' as const, content: response }]
     }))
 );

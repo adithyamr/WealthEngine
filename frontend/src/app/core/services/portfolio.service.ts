@@ -119,4 +119,9 @@ export class PortfolioService {
     getSentiment(ticker: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/sentiment/${ticker}`);
     }
+
+    // ─── Auth ───────────────────────────────────────────────────────────────
+    login(username: string, password: string): Observable<{ token: string }> {
+        return this.http.post<{ token: string }>(`${this.baseUrl}/auth/login`, { username, password });
+    }
 }
