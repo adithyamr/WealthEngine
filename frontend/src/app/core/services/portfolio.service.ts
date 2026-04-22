@@ -7,6 +7,8 @@ export interface PortfolioSummary {
     totalInvested: number;
     totalGainLoss: number;
     totalGainLossPercent: number;
+    totalGainLossPostTax: number;
+    totalGainLossPostTaxPercent: number;
     xirrPercent: number;
     allocationByType: Record<string, number>;
     allocationBySector: Record<string, number>;
@@ -39,6 +41,10 @@ export interface AssetDto {
     amfiCode: string;
     // Extra
     notes: string;
+    // Tax
+    gainLossPostTax?: number;
+    gainLossPostTaxPercent?: number;
+    ltcgEligible?: boolean;
 }
 
 export interface HoldingRequest {

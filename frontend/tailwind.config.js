@@ -6,8 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'wealth-dark': '#0a0e1a',
-        'wealth-card': '#111827',
+        'wealth-dark': '#070c18',
+        'wealth-card': '#0d1120',
+        'wealth-sidebar': '#0a0e1a',
         'wealth-accent': '#6366f1',
         'wealth-green': '#10b981',
         'wealth-red': '#ef4444',

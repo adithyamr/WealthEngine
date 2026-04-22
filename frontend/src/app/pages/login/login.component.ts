@@ -68,6 +68,7 @@ export class LoginComponent {
     this.portfolioService.login(this.username, this.password).subscribe({
       next: (res) => {
         localStorage.setItem('we_token', res.token);
+        localStorage.setItem('we_username', this.username);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

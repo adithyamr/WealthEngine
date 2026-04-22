@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
 
   body {
     @apply bg-wealth-dark text-gray-100 font-sans;
@@ -15,16 +15,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-700 rounded-full;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb { @apply bg-gray-700 rounded-full; }
+  ::-webkit-scrollbar-track { background: transparent; }
 }
 
 @layer components {
@@ -54,12 +47,25 @@
 
   .gain  { @apply text-wealth-green; }
   .loss  { @apply text-wealth-red; }
+
+  /* Glassmorphism card */
+  .glass-card {
+    background: rgba(13, 17, 32, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 1rem;
+  }
 }
 
-/* D3 treemap hover transitions */
+/* Micro-animation: slide-up */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.35s ease-out; }
+
+/* D3 / SVG hover transitions */
 svg rect { transition: opacity 0.2s ease; }
 
-/* Shimmer skeleton loading */
-.skeleton {
-  @apply bg-gray-800 rounded-lg animate-pulse;
-}
+/* Shimmer skeleton */
+.skeleton { @apply bg-gray-800 rounded-lg animate-pulse; }
