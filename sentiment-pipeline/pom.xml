@@ -33,11 +33,7 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
         </dependency>
-        <!-- Spring AI - Advisors (QuestionAnswerAdvisor) -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-advisors-vector-store</artifactId>
-        </dependency>
+
         <!-- HTML scraping -->
         <dependency>
             <groupId>org.jsoup</groupId>
